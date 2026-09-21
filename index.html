@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vishnevsky Advogados — Escritório de Advocacia em Campinas/SP</title>
+<meta name="description" content="Vishnevsky Advogados: quinze anos de atuação jurídica, atendimento em todo o território nacional. Família, imobiliário, empresarial, criminal e mais.">
+<link rel="icon" type="image/png" href="assets/logo-vishnevsky.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   VISHNEVSKY ADVOGADOS — direção "Códex"
+   O layout se comporta como um documento jurídico formatado: artigos
+   numerados (Art. 1º a 6º), selo/carimbo animado, assinatura, anexos.
+   Tipografia: Fraunces (serifada de contraste, display) + IBM Plex Sans
+   (corpo) + IBM Plex Mono (numeração/rótulos técnicos — o "juridiquês"
+   do sistema, não um terceiro estilo de leitura).
+   =================================================================== */
+
+:root{
+  --paper: #F5F1E7;
+  --paper-soft: #EDE7D8;
+  --ink: #17140F;
+  --ink-soft: #514A3A;
+  --ink-faint: #8B826C;
+  --stone: #D9D0BA;
+  --stone-strong: #C4B99C;
+  --seal: #9C2B1F;
+  --seal-dim: rgba(156,43,31,.10);
+  --seal-dim-strong: rgba(156,43,31,.22);
+
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Georgia', serif;
+  --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-stamp: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --space-xs: 0.5rem;
+  --space-s: 1rem;
+  --space-m: 2rem;
+  --space-l: clamp(3rem, 6vw, 6rem);
+  --space-xl: clamp(5rem, 12vw, 11rem);
+
+  --measure: 62ch;
+  --container: 1280px;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+}
+
+body{
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* grão de papel sutil — reforça a leitura de "documento" */
+body::before{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 0 0.06  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+img, svg{ display: block; max-width: 100%; }
+a{ color: inherit; }
+h1,h2,h3,p,ol,ul,figure{ margin: 0; }
+ol,ul{ padding: 0; list-style: none; }
+button{ font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+input, textarea{ font: inherit; color: inherit; }
+
+.container{
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+  position: relative;
+}
+
+.sr-only{
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+.skip-link{
+  position: fixed; top: -60px; left: 1rem; z-index: 999;
+  background: var(--ink); color: var(--paper);
+  padding: .75rem 1.25rem; font-family: var(--font-mono); font-size: .85rem;
+  transition: top .3s var(--ease);
+}
+.skip-link:focus{ top: 1rem; }
+
+:focus-visible{
+  outline: 2px solid var(--seal);
+  outline-offset: 3px;
+}
+
+/* ---------- barra de progresso (leitura do "documento") ---------- */
+.progress{
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: var(--seal);
+  width: 0%;
+  z-index: 200;
+  transition: width .1s linear;
+}
+
+/* ---------------------------- header ---------------------------- */
+header{
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.1rem 0;
+  transition: background .4s var(--ease), border-color .4s var(--ease), padding .4s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+header.is-scrolled{
+  background: rgba(245,241,231,.86);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--stone);
+  padding: .8rem 0;
+}
+header .container{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem;
+}
+.brand{
+  display: flex; align-items: center; gap: .65rem;
+  text-decoration: none;
+}
+.brand img{ height: 42px; width: auto; flex-shrink: 0; }
+
+nav.primary-nav{ display: flex; align-items: center; gap: clamp(1rem, 2.4vw, 2.4rem); }
+nav.primary-nav a:not(.btn){
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .04em;
+  text-decoration: none; color: var(--ink-soft);
+  position: relative; padding-bottom: 2px;
+}
+nav.primary-nav a:not(.btn)::after{
+  content:''; position: absolute; left:0; right:0; bottom:-2px; height: 1px;
+  background: var(--seal); transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--ease);
+}
+nav.primary-nav a:not(.btn):hover::after, nav.primary-nav a:not(.btn):focus-visible::after{ transform: scaleX(1); }
+
+.btn{
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .04em;
+  text-decoration: none; text-transform: uppercase;
+  padding: .85rem 1.4rem;
+  border: 1px solid var(--ink);
+  transition: background .3s var(--ease), color .3s var(--ease), transform .3s var(--ease), border-color .3s var(--ease);
+  white-space: nowrap;
+}
+.btn:hover, .btn:focus-visible{ background: var(--ink); color: var(--paper); transform: translateY(-2px); }
+.btn-primary{ background: var(--seal); border-color: var(--seal); color: var(--paper); }
+.btn-primary:hover, .btn-primary:focus-visible{ background: var(--ink); border-color: var(--ink); }
+.btn-ghost{ border-color: var(--stone-strong); }
+
+.nav-toggle{
+  display: none;
+  width: 44px; height: 44px;
+  align-items: center; justify-content: center;
+  border: 1px solid var(--stone-strong);
+}
+.nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{
+  content:''; display:block; width: 18px; height: 1px; background: var(--ink);
+  position: relative; transition: transform .3s var(--ease), opacity .3s var(--ease);
+}
+.nav-toggle span::before{ position:absolute; top:-6px; }
+.nav-toggle span::after{ position:absolute; top:6px; }
+.nav-toggle[aria-expanded="true"] span{ background: transparent; }
+.nav-toggle[aria-expanded="true"] span::before{ transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span::after{ transform: translateY(-6px) rotate(-45deg); }
+
+.mobile-menu{
+  position: fixed; inset: 0; z-index: 90;
+  background: var(--paper);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 2rem clamp(1.25rem,5vw,4rem);
+  transform: translateY(-100%);
+  transition: transform .5s var(--ease);
+}
+.mobile-menu.is-open{ transform: translateY(0); }
+.mobile-menu ol{ display: flex; flex-direction: column; gap: 1.5rem; }
+.mobile-menu a{
+  font-family: var(--font-display); font-size: clamp(2rem, 9vw, 3rem);
+  text-decoration: none; display: flex; align-items: baseline; gap: 1rem;
+}
+.mobile-menu a em{
+  font-family: var(--font-mono); font-style: normal; font-size: 1rem;
+  color: var(--seal);
+}
+
+/* --------------------------- kickers/art --------------------------- */
+.kicker{
+  display: flex; align-items: center; gap: 1.25rem;
+  font-family: var(--font-mono); text-transform: uppercase;
+  letter-spacing: .16em; font-size: .72rem; color: var(--seal);
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+.kicker::after{
+  content:''; flex: 1; height: 1px; background: var(--stone-strong);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .9s var(--ease);
+}
+.reveal.is-visible .kicker::after{ transform: scaleX(1); }
+
+section{
+  position: relative;
+  padding-block: var(--space-xl);
+  border-bottom: 1px solid var(--stone);
+}
+
+/* ------------------------------ hero ------------------------------ */
+.hero{
+  min-height: 100svh;
+  display: flex; align-items: center;
+  padding-top: 8rem;
+  overflow: hidden;
+}
+.hero .container{ display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: center; }
+.hero-copy{ grid-column: 1; max-width: 46ch; }
+.hero h1{
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.1rem, 5.2vw, 3.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.hero h1 .accent{
+  font-style: italic; font-weight: 600; color: var(--seal);
+}
+.hero h1 .quiet{
+  color: var(--ink-faint); font-size: .62em; display: block; margin-top: .5rem;
+}
+.hero-actions{ display: flex; flex-wrap: wrap; gap: 1rem; margin-top: clamp(2rem,4vw,3rem); }
+
+.hero-seal{
+  grid-column: 2; justify-self: end;
+  width: clamp(220px, 26vw, 420px);
+  transform: translateX(12%);
+  opacity: .92;
+}
+.hero-seal svg{ width: 100%; height: auto; }
+.hero-seal .ring{
+  transform-origin: center;
+  stroke-dasharray: 8 10;
+  animation: spin 60s linear infinite;
+}
+@media (prefers-reduced-motion: reduce){ .hero-seal .ring{ animation: none; } }
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+.scroll-cue{
+  position: absolute; left: 50%; bottom: clamp(1.5rem,4vw,3rem); transform: translateX(-50%);
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-faint); display: flex; flex-direction: column; align-items: center; gap: .6rem;
+}
+.scroll-cue::after{
+  content:''; width:1px; height: 28px; background: var(--stone-strong);
+  animation: scrollpulse 2s var(--ease) infinite;
+}
+@keyframes scrollpulse{ 0%,100%{ transform: scaleY(.4); opacity:.4; } 50%{ transform: scaleY(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce){ .scroll-cue::after{ animation: none; } }
+
+/* --------------------------- reveal system --------------------------- */
+.reveal{ opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.reveal.is-visible{ opacity: 1; transform: translateY(0); }
+.stagger > *{ opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.stagger.is-visible > *{ opacity: 1; transform: translateY(0); }
+.stagger.is-visible > *:nth-child(1){ transition-delay: 0ms; }
+.stagger.is-visible > *:nth-child(2){ transition-delay: 70ms; }
+.stagger.is-visible > *:nth-child(3){ transition-delay: 140ms; }
+.stagger.is-visible > *:nth-child(4){ transition-delay: 210ms; }
+.stagger.is-visible > *:nth-child(5){ transition-delay: 280ms; }
+.stagger.is-visible > *:nth-child(6){ transition-delay: 350ms; }
+.stagger.is-visible > *:nth-child(7){ transition-delay: 420ms; }
+.stagger.is-visible > *:nth-child(8){ transition-delay: 490ms; }
+.stagger.is-visible > *:nth-child(9){ transition-delay: 560ms; }
+.stagger.is-visible > *:nth-child(10){ transition-delay: 630ms; }
+.seal-stamp{ opacity: 0; transform: scale(1.5) rotate(-8deg); transition: opacity .6s var(--ease-stamp), transform .6s var(--ease-stamp); }
+.seal-stamp.is-visible{ opacity: .92; transform: translateX(12%) scale(1) rotate(0deg); }
+@media (prefers-reduced-motion: reduce){
+  .reveal, .stagger > *, .seal-stamp{ opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ------------------------- sede / foro nacional ------------------------- */
+.two-col{
+  display: grid; grid-template-columns: 0.9fr 1.4fr; gap: clamp(2rem, 6vw, 6rem);
+}
+.eyebrow{
+  font-family: var(--font-body); font-weight: 600; letter-spacing: .04em;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  max-width: 14ch;
+}
+.body-copy{
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+.tags{ display: flex; flex-wrap: wrap; gap: .75rem; margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+.tag{
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase;
+  padding: .55rem 1rem;
+  border: 1px dashed var(--stone-strong);
+  border-radius: 999px;
+  color: var(--ink-soft);
+}
+
+/* ----------------------------- fotos/anexos ----------------------------- */
+.doc-photo{
+  border: 1px solid var(--stone-strong);
+  background: var(--paper-soft);
+  padding: .75rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.doc-photo img{ width: 100%; height: auto; display: block; }
+.doc-photo figcaption{
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint); margin-top: .75rem;
+}
+.doc-photo--compact{ max-width: 420px; }
+.doc-photo--wide{ max-width: 760px; margin-inline: auto; }
+
+/* ----------------------------- áreas ----------------------------- */
+.areas-head{ display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; flex-wrap: wrap; margin-bottom: clamp(2rem,4vw,3.5rem); }
+.areas-head h2{
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  max-width: 16ch;
+}
+.areas-list{
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  counter-reset: area;
+}
+.areas-list li{
+  counter-increment: area;
+  display: flex; align-items: baseline; gap: 1.1rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--stone);
+}
+.areas-list li::before{
+  content: counter(area, upper-roman) '.';
+  font-family: var(--font-mono); color: var(--seal); font-size: .85rem;
+  min-width: 2.4ch;
+}
+.areas-list a{
+  text-decoration: none;
+  font-family: var(--font-display); font-size: clamp(1.15rem, 2vw, 1.5rem);
+  position: relative; padding-bottom: 2px;
+  transition: color .3s var(--ease), transform .3s var(--ease);
+}
+.areas-list a::after{
+  content:''; position: absolute; left: 0; bottom: -2px; height: 1px; width: 0;
+  background: var(--seal); transition: width .35s var(--ease);
+}
+.areas-list li:hover a, .areas-list li:focus-within a{ color: var(--seal); transform: translateX(6px); }
+.areas-list li:hover a::after, .areas-list li:focus-within a::after{ width: 100%; }
+.areas-cta{ margin-top: clamp(2.5rem,4vw,4rem); }
+
+/* --------------------------- fundamentos --------------------------- */
+.clauses{ display: flex; flex-direction: column; }
+.clause{
+  display: grid; grid-template-columns: clamp(70px,10vw,120px) 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--stone);
+}
+.clauses .clause:last-child{ border-bottom: 1px solid var(--stone); }
+.clause-num{
+  font-family: var(--font-display); font-style: italic; font-weight: 500;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  color: var(--seal-dim-strong);
+  line-height: 1;
+}
+.clause p{
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-family: var(--font-display); font-weight: 400;
+  line-height: 1.3;
+  max-width: 34ch;
+  align-self: center;
+}
+
+/* ------------------------------ sobre ------------------------------ */
+.about-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 6vw, 6rem); }
+.about-text h2{
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  max-width: 16ch;
+}
+.about-text p + p{ margin-top: 1.15rem; }
+.profile{
+  margin-top: clamp(3rem, 6vw, 0rem);
+  padding: clamp(2rem, 4vw, 2.75rem);
+  border: 1px solid var(--stone-strong);
+  position: relative;
+}
+.signature{
+  font-family: var(--font-display); font-style: italic; font-weight: 600;
+  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+  position: relative; display: inline-block;
+}
+.signature-line{ width: 100%; height: 14px; margin-top: -6px; margin-bottom: .5rem; overflow: visible; }
+.signature-line path{
+  fill: none; stroke: var(--seal); stroke-width: 1.5;
+  stroke-dasharray: 340; stroke-dashoffset: 340;
+  transition: stroke-dashoffset 1.1s var(--ease) .1s;
+}
+.reveal.is-visible .signature-line path{ stroke-dashoffset: 0; }
+.role{
+  font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 1.25rem;
+}
+.profile p{ color: var(--ink-soft); font-size: .98rem; }
+.profile p + p{ margin-top: .9rem; }
+.oab-badge{
+  margin-top: 1.5rem;
+  display: inline-flex; align-items: center; gap: .6rem;
+  border: 1px dashed var(--stone-strong); border-radius: 999px;
+  padding: .5rem 1rem;
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em;
+  color: var(--seal);
+}
+
+/* ----------------------------- contato ----------------------------- */
+.contact-grid{ display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2.5rem, 6vw, 6rem); }
+.contact-copy p{ color: var(--ink-soft); font-size: clamp(1.05rem,1.4vw,1.2rem); max-width: 48ch; }
+.contact-copy p + p{ margin-top: 1rem; }
+
+form{ margin-top: clamp(2rem,4vw,3rem); display: grid; gap: 1.4rem; max-width: 46ch; }
+.field-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.field{ display: flex; flex-direction: column; gap: .5rem; }
+.field label{
+  font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.field input, .field textarea{
+  background: transparent;
+  border: none; border-bottom: 1px solid var(--stone-strong);
+  padding: .6rem 0;
+  font-size: 1rem;
+  transition: border-color .3s var(--ease);
+}
+.field input:focus, .field textarea:focus{ border-color: var(--seal); outline: none; }
+.field textarea{ resize: vertical; min-height: 90px; }
+.form-note{ font-family: var(--font-mono); font-size: .7rem; color: var(--ink-faint); }
+
+.anexos{ display: flex; flex-direction: column; }
+.anexo{ padding-block: 1.35rem; border-top: 1px solid var(--stone); }
+.anexos .anexo:last-child{ border-bottom: 1px solid var(--stone); }
+.anexo-label{ font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--seal); }
+.anexo-value{ font-family: var(--font-display); font-size: clamp(1.05rem, 1.6vw, 1.3rem); margin-top: .4rem; }
+.anexo-value a{ text-decoration: none; border-bottom: 1px solid var(--stone-strong); transition: border-color .3s var(--ease), color .3s var(--ease); }
+.anexo-value a:hover, .anexo-value a:focus-visible{ border-color: var(--seal); color: var(--seal); }
+.anexos .btn{ margin-top: 2rem; align-self: flex-start; }
+
+/* ------------------------------ footer ------------------------------ */
+footer{ padding-block: var(--space-l); }
+.footer-top{
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap;
+  padding-bottom: var(--space-l);
+}
+.footer-brand{ display: flex; align-items: center; gap: .75rem; }
+.footer-brand img{ height: 34px; width: auto; }
+.footer-links{ display: flex; flex-wrap: wrap; gap: clamp(1.5rem,3vw,3rem); }
+.footer-links a, .footer-links span{
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .04em; text-decoration: none;
+}
+.footer-links a{ color: var(--ink-soft); }
+.footer-links a:hover{ color: var(--seal); }
+.footer-links .disabled{ color: var(--ink-faint); opacity: .55; cursor: not-allowed; }
+.footer-bottom{
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  padding-top: var(--space-m); border-top: 1px solid var(--stone);
+  font-family: var(--font-mono); font-size: .72rem; color: var(--ink-faint);
+}
+
+/* -------------------------- whatsapp flutuante -------------------------- */
+.wa-float{
+  position: fixed; right: clamp(1rem,3vw,2rem); bottom: clamp(1rem,3vw,2rem); z-index: 150;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--seal); color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  border: 1px dashed rgba(245,241,231,.5);
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(23,20,15,.22);
+  transition: transform .35s var(--ease-stamp);
+}
+.wa-float:hover, .wa-float:focus-visible{ transform: scale(1.08) rotate(-4deg); }
+.wa-float svg{ width: 26px; height: 26px; }
+
+/* ------------------------------ responsivo ------------------------------ */
+@media (max-width: 900px){
+  nav.primary-nav{ display: none; }
+  .nav-toggle{ display: flex; }
+  .hero .container{ grid-template-columns: 1fr; }
+  .hero-seal{ grid-column: 1; justify-self: center; width: 55vw; transform: none; margin-top: 2.5rem; order: 2; }
+  .hero-copy{ max-width: 100%; }
+  .two-col, .about-grid, .contact-grid{ grid-template-columns: 1fr; }
+  .areas-list{ grid-template-columns: 1fr; }
+  .clause{ grid-template-columns: 60px 1fr; }
+  .field-row{ grid-template-columns: 1fr; }
+  .footer-top{ flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#inicio">Pular para o conteúdo</a>
+<div class="progress" id="progress"></div>
+
+<header id="site-header">
+  <div class="container">
+    <a class="brand" href="#inicio" aria-label="Vishnevsky Advogados — início">
+      <img src="assets/logo-vishnevsky.png" alt="Vishnevsky Advogados" width="260" height="80">
+    </a>
+    <nav class="primary-nav" aria-label="Navegação principal">
+      <a href="#escritorio">Escritório</a>
+      <a href="#atuacao">Atuação</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+      <a class="btn btn-primary" id="nav-wa" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menu">
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<nav class="mobile-menu" id="mobile-menu" aria-label="Navegação mobile">
+  <ol>
+    <li><a href="#escritorio"><em>01</em>Escritório</a></li>
+    <li><a href="#atuacao"><em>02</em>Atuação</a></li>
+    <li><a href="#sobre"><em>03</em>Sobre</a></li>
+    <li><a href="#contato"><em>04</em>Contato</a></li>
+  </ol>
+</nav>
+
+<main id="inicio">
+
+  <!-- ART. 1º — HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-copy">
+        <p class="kicker">Art. 1º — Do Objeto</p>
+        <h1>No Vishnevsky Advogados, unimos <span class="accent">expertise, ética e proximidade</span> no atendimento para entregar soluções jurídicas claras, estratégicas e eficientes. Nossa equipe é composta por profissionais altamente qualificados, com experiência em diferentes áreas do Direito.</h1>
+        <div class="hero-actions">
+          <a class="btn btn-primary" id="hero-wa" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          <a class="btn btn-ghost" href="#atuacao">Ver áreas de atuação</a>
+        </div>
+      </div>
+      <div class="hero-seal seal-stamp reveal" id="hero-seal-wrap">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="ring" cx="100" cy="100" r="92" fill="none" stroke="#9C2B1F" stroke-width="1.4"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#9C2B1F" stroke-width="0.8" stroke-dasharray="2 5" opacity=".6"/>
+          <path d="M60 70 L100 130 L140 70" fill="none" stroke="#17140F" stroke-width="2.4"/>
+          <path d="M60 130 L100 70 L140 130" fill="none" stroke="#17140F" stroke-width="2.4"/>
+        </svg>
+      </div>
+    </div>
+    <p class="scroll-cue">Role para continuar</p>
+  </section>
+
+  <!-- ART. 2º — SEDE E FORO NACIONAL -->
+  <section id="escritorio" class="reveal">
+    <div class="container">
+      <p class="kicker">Art. 2º — Da Sede e do Foro Nacional</p>
+      <div class="two-col">
+        <h2 class="eyebrow">Presença em todo território nacional</h2>
+        <div>
+          <p class="body-copy">Nosso escritório está sediado em Campinas/SP, mas estamos prontos para lhe atender em TODO TERRITÓRIO NACIONAL. Atuamos com uma rede de correspondentes qualificados em todas as regiões e através de atendimento ONLINE E DIGITAL, proporcionando agilidade e conveniência onde você estiver.</p>
+          <div class="tags stagger">
+            <span class="tag">Atendimento On-line</span>
+            <span class="tag">Nacional</span>
+            <span class="tag">Correspondentes</span>
+            <span class="tag">Campinas</span>
+          </div>
+        </div>
+      </div>
+      <figure class="doc-photo doc-photo--compact reveal">
+        <img src="assets/fachada-campinas.png" alt="Fachada do prédio-sede do Vishnevsky Advogados em Campinas/SP" loading="lazy" width="228" height="163">
+        <figcaption>Anexo — Fachada da sede, Campinas/SP</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ART. 3º — ÁREAS DE ATUAÇÃO -->
+  <section id="atuacao" class="reveal">
+    <div class="container">
+      <p class="kicker">Art. 3º — Das Áreas de Atuação</p>
+      <div class="areas-head">
+        <h2>Nosso escritório possui um corpo jurídico completo para atender sua demanda.</h2>
+      </div>
+      <ol class="areas-list stagger">
+        <li><a href="#contato">Família</a></li>
+        <li><a href="#contato">Imobiliário</a></li>
+        <li><a href="#contato">Consumidor</a></li>
+        <li><a href="#contato">Empresarial</a></li>
+        <li><a href="#contato">Criminal</a></li>
+        <li><a href="#contato">Tribunal do Júri</a></li>
+        <li><a href="#contato">Trabalhista</a></li>
+        <li><a href="#contato">Previdenciário</a></li>
+        <li><a href="#contato">Tributário</a></li>
+        <li><a href="#contato">Condominial</a></li>
+      </ol>
+      <div class="areas-cta">
+        <a class="btn btn-ghost" href="#contato">Saiba mais</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ART. 4º — FUNDAMENTOS -->
+  <section id="fundamentos" class="reveal">
+    <div class="container">
+      <p class="kicker">Art. 4º — Dos Fundamentos</p>
+      <h2 class="sr-only">Por que escolher o Vishnevsky Advogados?</h2>
+      <div class="clauses">
+        <div class="clause"><span class="clause-num">I.</span><p>Uma trajetória de quinze anos dedicada à atuação em diferentes áreas jurídicas.</p></div>
+        <div class="clause"><span class="clause-num">II.</span><p>Conte com um atendimento online de qualidade, prático e ágil, onde quer que você esteja</p></div>
+        <div class="clause"><span class="clause-num">III.</span><p>Atuação multidisciplinar e personalizada, reunindo conhecimento, experiência e estratégia para solucionar questões jurídicas com eficiência.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ART. 5º — QUALIFICAÇÃO / QUEM SOMOS -->
+  <section id="sobre" class="reveal">
+    <div class="container">
+      <p class="kicker">Art. 5º — Da Qualificação</p>
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Excelência e Experiência na Advocacia</h2>
+          <p>Com quinze anos de atuação, o Vishnevsky Advogados é formado por profissionais com ampla experiência em diversos ramos do Direito e sólida vivência jurídica. Essa trajetória nos oportuniza atuar de forma qualificada em todos os setores jurídicos, oferecendo soluções estratégicas e eficazes para nossos clientes.</p>
+          <p>Nosso compromisso é tratar cada caso com dedicação, seriedade e comprometimento, buscando sempre a melhor solução jurídica de acordo com as necessidades de cada cliente. Atuamos de maneira personalizada, unindo conhecimento técnico, visão prática e respeito às particularidades de cada demanda.</p>
+          <p>No Vishnevsky Advogados, acreditamos que a advocacia deve ser exercida com ética, responsabilidade e proximidade, garantindo segurança e confiança em cada etapa da jornada jurídica.</p>
+        </div>
+        <div class="profile">
+          <span class="signature">Dimitri Vishnevsky</span>
+          <svg class="signature-line" viewBox="0 0 340 14" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 10 C 60 -4, 110 18, 170 6 S 280 -6, 338 8"/>
+          </svg>
+          <p class="role">Sócio Fundador</p>
+          <p>Nosso Sócio Fundador é especialista em Processo Civil e acumula quinze anos de experiência nas áreas de Direito de Família, Direito do Consumidor, Direito Trabalhista, Direito Imobiliário e Direito Sucessório. Ao longo de sua carreira, adquiriu vasta experiência também na gestão de contencioso, atuando de maneira estratégica para garantir a melhor condução de processos judiciais.</p>
+          <p>Sua atuação diversificada em diferentes ramos do direito permitiu desenvolver habilidades sólidas para lidar com questões complexas, sempre buscando soluções eficientes e personalizadas para atender às necessidades específicas de cada cliente.</p>
+          <span class="oab-badge">OAB/SP Nº 327.442</span>
+        </div>
+      </div>
+      <figure class="doc-photo doc-photo--wide reveal">
+        <img src="assets/sala-reunioes.png" alt="Sala de reuniões do escritório Vishnevsky Advogados" loading="lazy" width="678" height="452">
+        <figcaption>Anexo — Sala de reuniões</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ART. 6º — CONTATO -->
+  <section id="contato" class="reveal">
+    <div class="container">
+      <p class="kicker">Art. 6º — Do Foro de Eleição</p>
+      <div class="contact-grid">
+        <div>
+          <div class="contact-copy">
+            <p>Estamos à disposição para ajudar! Envie sua dúvida para a nossa equipe e teremos o prazer de responder com agilidade e precisão.</p>
+            <p>Sua questão é importante para nós, e estamos prontos para auxiliá-lo da melhor forma possível.</p>
+          </div>
+          <form id="contact-form" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-nome">Nome</label>
+                <input id="f-nome" name="nome" type="text" required autocomplete="given-name">
+              </div>
+              <div class="field">
+                <label for="f-sobrenome">Sobrenome</label>
+                <input id="f-sobrenome" name="sobrenome" type="text" required autocomplete="family-name">
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-email">Seu E-mail</label>
+              <input id="f-email" name="email" type="email" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="f-mensagem">Mensagem</label>
+              <textarea id="f-mensagem" name="mensagem" required></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Enviar Mensagem</button>
+            <p class="form-note">Ao enviar, sua mensagem abre diretamente no WhatsApp do escritório.</p>
+          </form>
+        </div>
+        <div class="anexos reveal">
+          <div class="anexo">
+            <p class="anexo-label">Anexo I — Endereço</p>
+            <p class="anexo-value">R. Rei Salomão, nº 359 — Jardim Conceição, Campinas - SP</p>
+          </div>
+          <div class="anexo">
+            <p class="anexo-label">Anexo II — Telefone / WhatsApp</p>
+            <p class="anexo-value"><a href="#" id="anexo-wa" target="_blank" rel="noopener">(11) 98282-7672</a></p>
+          </div>
+          <div class="anexo">
+            <p class="anexo-label">Anexo III — E-mail</p>
+            <p class="anexo-value"><a href="mailto:contato@vishnevskyadvogados.com">contato@vishnevskyadvogados.com</a></p>
+          </div>
+          <div class="anexo">
+            <p class="anexo-label">Anexo IV — Instagram</p>
+            <p class="anexo-value"><a href="https://instagram.com/dimitrivishnevsky1" target="_blank" rel="noopener">@dimitrivishnevsky1</a></p>
+          </div>
+          <a class="btn btn-primary" id="anexo-wa-btn" href="#" target="_blank" rel="noopener">Falar no WhatsApp agora</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <a class="footer-brand brand" href="#inicio" aria-label="Vishnevsky Advogados — início">
+        <img src="assets/logo-vishnevsky.png" alt="Vishnevsky Advogados" width="260" height="80">
+      </a>
+      <nav class="footer-links" aria-label="Navegação do rodapé">
+        <a href="#escritorio">Escritório</a>
+        <a href="#atuacao">Atuação</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+        <span class="disabled" aria-disabled="true" title="Em breve">Artigos — em breve</span>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span id="footer-year">© 2026 Vishnevsky Advogados</span>
+      <span>OAB/SP Nº 327.442 · Campinas/SP</span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.1-.3-.2-.5-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.4 5.2L2 22l4.9-1.3C8.4 21.6 10.1 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.7 0-3.3-.5-4.7-1.3l-.3-.2-3 .8.8-2.9-.2-.3C3.7 15 3.1 13.5 3.1 12c0-4.9 4-8.9 8.9-8.9s8.9 4 8.9 8.9-4 8.9-8.9 8.9z"/></svg>
+</a>
+
+<script>
+(function(){
+  "use strict";
+  var WA_NUMBER = "5511982827672";
+  function waLink(text){
+    return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text);
+  }
+  var defaultMsg = "Olá, Dimitri. Vim pelo site do Vishnevsky Advogados e gostaria de conversar sobre um caso.";
+  ["nav-wa","hero-wa","anexo-wa","anexo-wa-btn","wa-float"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.href = waLink(defaultMsg);
+  });
+
+  var form = document.getElementById("contact-form");
+  if(form){
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var nome = form.nome.value.trim();
+      var sobrenome = form.sobrenome.value.trim();
+      var email = form.email.value.trim();
+      var mensagem = form.mensagem.value.trim();
+      var text = "Olá, Dimitri. Meu nome é " + nome + " " + sobrenome +
+        " (" + email + "). " + mensagem;
+      window.open(waLink(text), "_blank", "noopener");
+    });
+  }
+
+  var header = document.getElementById("site-header");
+  var progress = document.getElementById("progress");
+  function onScroll(){
+    var y = window.scrollY || window.pageYOffset;
+    header.classList.toggle("is-scrolled", y > 40);
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (y / docHeight) * 100 : 0;
+    progress.style.width = pct + "%";
+  }
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  var toggle = document.getElementById("nav-toggle");
+  var menu = document.getElementById("mobile-menu");
+  if(toggle && menu){
+    toggle.addEventListener("click", function(){
+      var open = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!open));
+      menu.classList.toggle("is-open", !open);
+      document.body.style.overflow = !open ? "hidden" : "";
+    });
+    menu.querySelectorAll("a").forEach(function(a){
+      a.addEventListener("click", function(){
+        toggle.setAttribute("aria-expanded", "false");
+        menu.classList.remove("is-open");
+        document.body.style.overflow = "";
+      });
+    });
+  }
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if("IntersectionObserver" in window && !reduceMotion){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".reveal, .stagger, .seal-stamp").forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll(".reveal, .stagger, .seal-stamp").forEach(function(el){ el.classList.add("is-visible"); });
+  }
+
+  var year = document.getElementById("footer-year");
+  if(year) year.textContent = "© " + new Date().getFullYear() + " Vishnevsky Advogados";
+})();
+</script>
+</body>
+</html>
